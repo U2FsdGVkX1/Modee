@@ -185,8 +185,11 @@ module.exports = function(callback, options) {
         },
         get: function(callback, table, column, where) {
             if(column != '*') {
+                var columnNQ = column; 
+                var columnObject = typeof column == 'object';
+
                 column = this.column_quote(column);
-                if(typeof column == 'object') {
+                if(columnObject == true) {
                     column = column.join(',');
                 }
             }
@@ -194,7 +197,11 @@ module.exports = function(callback, options) {
             where['LIMIT'] = 1;
             sql = 'SELECT ' + column + ' FROM ' + this.column_quote(table) + ' ' + this.where_t(where);
             return this.query(function(err, rows, fields) {
-                callback(err, rows[0], fields);
+                if(columnObject == false) {
+                    callback(err, rows[0][columnNQ], fields);
+                } else {
+                    callback(err, rows[0], fields);
+                }
             }, sql);
         },
         has: function(callback, table, where) {
