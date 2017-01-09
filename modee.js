@@ -130,7 +130,7 @@ class Modee {
                     result[index] = this.value_quote(value[index]);
                 }
                 break;
-            case undefined:
+            case null:
                 result = 'NULL';
                 break;
         }
